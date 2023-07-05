@@ -1,8 +1,9 @@
 <?php
 
+require 'Echoable.php';
 
 
-class PageButton
+class PageButton implements Echoable
 {
     public string $title;
     public string $link;
@@ -12,7 +13,7 @@ class PageButton
         $this->title = $title;
     }
 
-    function get_html() {
+    public function echo(): void {
         $url = $_SERVER['REQUEST_URI'];
         if ($url == $this->link) {
             echo "<a class='page_button_active'> ";

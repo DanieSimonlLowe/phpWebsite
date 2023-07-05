@@ -2,7 +2,8 @@
 
 require 'PageButton.php';
 
-class ToolBar
+
+class ToolBar implements Echoable
 {
     private array $pageButtons;
 
@@ -13,10 +14,11 @@ class ToolBar
         }
     }
 
-    function get_html() {
+    public function echo(): void
+    {
         echo "<div class='topnav'>";
         foreach ($this->pageButtons as $pageButton) {
-            $pageButton->get_html();
+            $pageButton->echo();
         }
         echo "</div>";
     }

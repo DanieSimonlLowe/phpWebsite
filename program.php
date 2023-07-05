@@ -10,5 +10,5 @@ $buttons = array("main"=>"/prog/program.php", "other" => "/dashboard");
 $toolBar = new ToolBar($buttons);
 
 
-$toolBar->get_html();
+$toolBar->echo();
 
