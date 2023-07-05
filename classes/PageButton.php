@@ -1,6 +1,6 @@
 <?php
 
-require 'Echoable.php';
+require_once 'Echoable.php';
 
 
 class PageButton implements Echoable

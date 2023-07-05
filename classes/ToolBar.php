@@ -1,6 +1,7 @@
 <?php
 
-require 'PageButton.php';
+require_once 'PageButton.php';
+require_once 'Echoable.php';
 
 
 class ToolBar implements Echoable
