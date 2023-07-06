@@ -2,6 +2,8 @@
 
 <?php
 require_once 'ToolBar.php';
+require_once 'classes/PdoContainer.php';
+
 makeToolBar();
 
 $name = '';
@@ -14,22 +16,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["name"])) {
         $error .= 'name is required.<br/>';
         $isValid = false;
+    } else {
+        $name = $_POST["name"];
     }
     if (empty($_POST["password1"])) {
         $error .= 'password1 is required.<br/>';
         $isValid = false;
+    } else {
+        $password1 = $_POST["password1"];
     }
     if (empty($_POST["password2"])) {
         $error .= 'password2 is required.<br/>';
         $isValid = false;
+    } else {
+        $password2 = $_POST["password2"];
     }
     if ($_POST["password1"] !== $_POST["password2"]) {
         $error .= 'password are not equal.<br/>';
         $isValid = false;
-    }
-    if ($isValid) {
+    } else if ($isValid) {
         #TODO setup sql.
-        $error = 'true';
+        $pdo = PdoContainer::getPdo();
+
+        $statement = $pdo->prepare('INSERT INTO users (username, password) VALUES (:name,:password);');
+        $statement->execute([':name' => $name, ':password' => $password1]);
+        $error = 'registered';
     }
  }
 
