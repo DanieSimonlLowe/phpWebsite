@@ -2,7 +2,7 @@
 
 <?php
 
-require_once 'ToolBar.php';
+require_once 'functions/ToolBar.php';
 
 makeToolBar();
 

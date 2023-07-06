@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="style.css">
 
 <?php
-require_once 'ToolBar.php';
+require_once 'functions/ToolBar.php';
 require_once 'classes/PdoContainer.php';
 
 makeToolBar();
@@ -38,9 +38,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         #TODO setup sql.
         $pdo = PdoContainer::getPdo();
 
-        $statement = $pdo->prepare('INSERT INTO users (username, password) VALUES (:name,:password);');
-        $statement->execute([':name' => $name, ':password' => $password1]);
-        $error = 'registered';
+        try {
+
+            $insert = $pdo->prepare('INSERT INTO users ( username, password) VALUES ( :name, :password)');
+            $hash = password_hash($password1,null);
+
+            if ($insert->execute([':name' => $name, ':password' => $hash])) {
+                $error = 'registered';
+            } else {
+                $error = 'username already used';
+            }
+        } catch (Exception $e) {
+            $error = 'failed to generate salt.';
+        }
+
     }
  }
 
