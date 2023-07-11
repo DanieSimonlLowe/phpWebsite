@@ -12,21 +12,28 @@ function login(string $name, string $password): void {
     $pdo = PdoContainer::getPdo();
 
 
-    $getData = $pdo->prepare('SELECT password, session FROM users where username = :name');
+    $getData = $pdo->prepare('SELECT password, session, id FROM users where username = :name');
     if (!$getData->execute([':name' => $name]) ) {
         $error = 'server problem. code:1';
         return;
     }
+    $date = $getData->fetchAll();
 
-
-    if (password_verify($getData->fetchColumn(0), $password)) {
+    if (!$date) {
         $error = 'incorrect password or username';
         return;
     }
-    if ($getData->fetchColumn(1)) {
+    if (password_verify($date[0]["password"], $password)) {
+        $error = 'incorrect password or username';
+        return;
+    }
+    if ($date[0]["session"]) {
         $error = 'that user is all ready logged in on another session.';
         return;
     }
+
+    $id = $date[0]["id"];
+
     try {
         $session = bin2hex(random_bytes(30));
     } catch (Exception $e) {
@@ -42,7 +49,7 @@ function login(string $name, string $password): void {
     }
 
     $error = 'logged in';
-    setUser($session);
+    setUser($session, $id);
     $url = '/prog/index.php';
     header('Location: '.$url);
     die();
